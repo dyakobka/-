@@ -1,9 +1,9 @@
-object Form6: TForm6
-  Left = 1172
-  Top = 183
-  Width = 630
-  Height = 639
-  Caption = 'Form6'
+object Form8: TForm8
+  Left = 2113
+  Top = 117
+  Width = 1305
+  Height = 675
+  Caption = 'Form8'
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
@@ -11,6 +11,7 @@ object Form6: TForm6
   Font.Name = 'MS Sans Serif'
   Font.Style = []
   OldCreateOrder = False
+  OnActivate = FormActivate
   PixelsPerInch = 96
   TextHeight = 13
 end

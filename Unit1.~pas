@@ -19,7 +19,7 @@ type
   public
   c1: string;
   s1: integer;
-  o1, sd1, p1, m1, gr1 : integer;
+  o1, sd1, p1, m1, gr1, d1 : integer;
   o1_st, d1_st, sd1_st, p1_st, m1_st, gr1_st, ey_st : string;
   course_t, sem_t : integer;
   y_s, y_f : integer;
@@ -67,7 +67,7 @@ if (edit1.Text>'') and (edit2.Text>'') then
               dm.Q1.Active:=true;
               if dm.Q1.Eof=false then
                 begin
-                sd1:=dm.Q1.fieldbyname('ID_Div').AsInteger;
+                d1:=dm.Q1.fieldbyname('ID_Div').AsInteger;
                 sd1:=dm.Q1.fieldbyname('ID_SubDiv').AsInteger;
                 p1:=dm.Q1.fieldbyname('ID_Post').AsInteger;
                 m1:=dm.Q1.fieldbyname('ID_Man').AsInteger;
@@ -88,14 +88,14 @@ if (edit1.Text>'') and (edit2.Text>'') then
                 dm.Q1.Active:=true;
                 if dm.Q1.Eof=false then
                   begin
-                    sd1:=dm.Q1.fieldbyname('ID_Div').AsInteger;
+                    d1:=dm.Q1.fieldbyname('ID_Div').AsInteger;
                     sd1:=dm.Q1.fieldbyname('ID_SubDiv').AsInteger;
                   end;
                 end else
                 begin
                 gr1:=0; m1:=0;
 
-                sd1:=0;  sd1:=0;
+                d1:=0;  sd1:=0;
                 end;
               end;
         end;
@@ -125,13 +125,20 @@ if (edit1.Text>'') and (edit2.Text>'') then
         dm.Q1.Active:=true;
 
         if dm.Q1.Eof=false then p1_st:=dm.Q1.fieldbyname('Name').AsString else p1_st:='';
+
+        dm.Q1.Close;
+        dm.Q1.SQL.Clear;
+        dm.Q1.SQL.Add('select * from mans where ID_Man='+inttostr(m1));
+        dm.Q1.Active:=true;
+        if dm.Q1.Eof=false then m1_st:=dm.Q1.fieldbyname('LastName').AsString+' '+dm.Q1.fieldbyname('Names').AsString+' '+dm.Q1.fieldbyname('Patronimic').AsString else m1_st:='';
+
         dm.Q1.Close;
         dm.Q1.SQL.Clear;
         dm.Q1.SQL.Add('select * from groups where id_group='+inttostr(gr1));
         dm.Q1.Active:=true;
         if dm.Q1.Eof=false then
          begin
-         gr1_st:=dm.Q1.fieldbyname('Name').AsString;
+         gr1_st:=dm.Q1.fieldbyname('Names').AsString;
          y_s:=dm.Q1.fieldbyname('Year_S').AsInteger;
          course_t:=dm.Q1.fieldbyname('Course').AsInteger;
          decodedate(date(),t3,t2,t1);

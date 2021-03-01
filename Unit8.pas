@@ -1,30 +1,102 @@
-unit Unit6;
+unit Unit8;
 
 interface
 
 uses
   Windows, Messages, SysUtils, Variants, Classes, Graphics, Controls, Forms,
-  Dialogs, StdCtrls, Grids, ExtCtrls, Buttons;
+  Dialogs, Grids, StdCtrls, Buttons, ExtCtrls;
 
 type
-  TForm6 = class(TForm)
+  TForm8 = class(TForm)
+    Label1: TLabel;
+    Label2: TLabel;
+    Label3: TLabel;
+    Label4: TLabel;
+    Label5: TLabel;
+    Label6: TLabel;
+    Label7: TLabel;
+    Label8: TLabel;
+    Label9: TLabel;
+    Label10: TLabel;
+    Label11: TLabel;
+    Label12: TLabel;
+    Label13: TLabel;
+    Label14: TLabel;
+    Label15: TLabel;
+    Label16: TLabel;
+    Label17: TLabel;
+    Label18: TLabel;
+    Label19: TLabel;
+    Shape1: TShape;
+    Shape2: TShape;
+    Shape3: TShape;
+    Shape4: TShape;
+    Shape5: TShape;
+    Shape6: TShape;
+    Shape7: TShape;
+    Label20: TLabel;
+    Label21: TLabel;
+    Label22: TLabel;
+    Label23: TLabel;
+    Label24: TLabel;
+    Label25: TLabel;
+    Label26: TLabel;
+    Shape8: TShape;
+    Label27: TLabel;
+    Shape9: TShape;
+    Shape10: TShape;
+    Shape11: TShape;
+    Shape12: TShape;
+    Label28: TLabel;
+    Label29: TLabel;
+    Label30: TLabel;
+    Label31: TLabel;
+    Shape13: TShape;
+    Shape14: TShape;
+    Shape15: TShape;
+    Shape16: TShape;
+    Shape17: TShape;
+    Label32: TLabel;
+    Label33: TLabel;
+    Label34: TLabel;
+    Label35: TLabel;
+    Label36: TLabel;
+    SpeedButton1: TSpeedButton;
+    SpeedButton2: TSpeedButton;
+    SpeedButton3: TSpeedButton;
+    SpeedButton4: TSpeedButton;
+    SpeedButton5: TSpeedButton;
+    Label37: TLabel;
+    Label38: TLabel;
+    Label39: TLabel;
+    ComboBox1: TComboBox;
+    ComboBox2: TComboBox;
+    ComboBox3: TComboBox;
+    Edit1: TEdit;
+    ComboBox4: TComboBox;
+    ComboBox5: TComboBox;
+    Edit2: TEdit;
+    Edit3: TEdit;
+    Edit4: TEdit;
+    Edit5: TEdit;
+    Edit7: TEdit;
+    StringGrid1: TStringGrid;
+    procedure FormCreate(Sender: TObject);
+    procedure FormActivate(Sender: TObject);
   private
     { Private declarations }
   public
     { Public declarations }
-    
   end;
 
 var
-  Form6: TForm6;
+  Form8: TForm8;
 
-implementation                        
+implementation
+
+uses Unit7, Unit1DM;
 
 {$R *.dfm}
-
-
-{
- git submodule add https://github.com/dyakobka/spkis spkis
 
 procedure TForm8.FormActivate(Sender: TObject);
 var i, j : integer;
@@ -160,6 +232,6 @@ while dm.Q1.Eof=false do
 
     end;
 end;
-end;}
+end;
 
 end.

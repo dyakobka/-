@@ -56,6 +56,7 @@ type
     procedure FormCreate(Sender: TObject);
     Procedure Zap_STR1(Sender: TObject);
     procedure N1Click(Sender: TObject);
+    procedure N9Click(Sender: TObject);
   private
     { Private declarations }
   public
@@ -368,6 +369,139 @@ begin
 form5.ShowModal;
 end;
 
+procedure TForm4.N9Click(Sender: TObject);
+var x1, wb, sheet : OLEVariants;
+    st1, st2, st3, st4, st5, sub_short : string;
+    i, j, fe1, edu_sem, sub1, course1, sem1, d1, gr2, ey, ct1 : integer;
+    t1, t2, t3 : word;
+begin
+decodedate(date(),t3,t2,t1);
+if date()>strtodate('01.09.'+inttostr(t3)) then st1:=inttostr(t3)+'-'+inttostr(t3+1) else
+st1:=inttostr(t3-1)+'-'+inttostr(t3);
+dm.Q1.Close;
+dm.Q1.SQL.Clear;
+dm.Q1.SQL.Add('select * from education_years order by id_ey');
+dm.Q1.Active:=true;
+if dm.Q1.Eof=false then ey:=dm.Q1.fieldbyname('id_ey').AsInteger else
+  begin
+  dm.Q1.Close;
+  dm.Q1.SQL.Clear;
+  dm.Q1.SQL.Add('select * from education_years order by id_ey');
+  dm.Q1.Active:=true;
+  dm.Q1.Last;
+  ey:=dm.Q1.fieldbyname('id_ey').AsInteger+1;
+  dm.Q1.Close;
+  dm.Q1.SQL.Clear;
+  dm.Q1.SQL.Add('select * from education_years(names,id_ey) values('+quotedstr(st1)+','+inttostr(ey)+')');
+  dm.Q1.ExecSQL;
+  end;
+if opendialog1.Execute then
+  begin
+  x1:=CreateOLEObject('excel.application');
+  wb:=x1.WorkBooks.add(opendialog1.FileName);
+  sheet:=wb.sheets[1];
+  j:=0;
+  st3:='';
+  while st3<>'Çàâ.êàôåäðîé:' do
+    begin
+    inc(j);
+    st2:=sheet.cells[j,2];
+    st3:=sheet.cells[j,3];
+    if st3='1 ñåìåñòð' then edu_sem:=1;
+    if st3='2 ñåìåñòð' then edu_sem:=2;
+    if st2='Î×ÍÀß ÔÎÐÌÀ ÎÁÓ×ÅÍÈß' then fe1:=1;
+    if st2='ÇÀÎ×ÍÀß ÔÎÐÌÀ ÎÁÓ×ÅÍÈß' then fe1:=2;
+    if st2='Î×ÍÎ-ÇÀÎ×ÍÀß ÔÎÐÌÀ ÎÁÓ×ÅÍÈß' then fe1:=3;
+    if pos(st3,'Ñïåöèàëüíîñòü:')>0 then
+      begin
+      st3:=sheet.cells[j,36];
+      dm.Q1.Close;
+      dm.Q1.SQL.Clear;
+      dm.Q1.SQL.Add('select * from divisions where title='+quotedstr(st3));
+      dm.Q1.Active:=true;
+      if dm.Q1.Eof=false then d1:=dm.Q1.fieldbyname('id_div').AsInteger else d1:=0;
+      end;
+      st1:=sheet.cells[j,1];
+      if (st1>'') and (st2>'') and (st3>'') and (d1>0) then
+        begin
+        dm.Q1.Close;
+        dm.Q1.SQL.Clear;
+        dm.Q1.SQL.Add('select * from subjects where names='quotedstr(st3)+' and code_sub='+qoutedstr(st2));
+        dm.Q1.Active:=true;
+        if dm.Q1.Eof=false then sub1:=dm.Q1.fieldbyname('id_sub').AsInteger else
+          begin
+          dm.Q1.Close;
+          dm.Q1.SQL.Clear;
+          dm.Q1.SQL.Add('select * from subjects order by id_sub');
+          dm.Q1.Active:=true;
+          dm.Q1.Last;
+          sub1:=dm.Q1.fieldbyname('id_sub').AsInteger+1;
+          st4:=st3;
+          sub_short:='';
+          while pos(' ', st4)>0 do
+            begin
+            st5:=copy(st4,1,pos(' ',st4)-1);
+            if length(st5)>3 then sub_short:=sub_short+ansippercase(copy(st5,1,1)) else
+            sub_short:=sub_short+st5;
+            delete(st4,1,pos(' ',st4));
 
-
+            end;
+          if lenght(st5)>3 then sub_short:=sub_short+ansippercase(copy(st5,1,1)) else sub_short:=sub_short+st5;
+          dm.Q1.Close;
+          dm.Q1.SQL.Clear;
+          dm.Q1.SQL.Add('select * from subjects(names,title,id_sub, id_subdiv, code_sub) values('+ quotedstr(st3)+
+          ','+qoutedstr(sub_short)+','+inttostr(sub1)+','+inttostr(from1.sd1)+','+qoutedstr(st2)+')');
+          dm.Q1.ExecSQl;
+          end;
+        st1:=sheeet.cells[j,4];
+        if strtointdef(st1,0)>0 then
+          begin
+          course1:=strtoint(st1);
+          if edu_sem=1 then sem1:=course1*2-1 else sem1:=course1*2;
+          st1:=sheet.cells[j,5];
+          if (st1>'') and (pos(',', st1)=0) then
+            begin
+            dm.Q1.Close;
+            dm.Q1.SQL.Clear;
+            dm.Q1.SQL.Add('select * from groups where names=' + qoutedstr(st1)+' and id_div='+inttostr(d1));
+            dm.Q1.Active:=true;
+            if dm.Q1.Eof=false then gr2:=dm.Q1.fieldbyname('id_group').AsInteger else
+              begin
+              dm.Q1.Close;
+              dm.Q1.SQL.Clear;
+              dm.Q1.SQL.Add('select * from groups order by id_group');
+              dm.Q1.Active:=true;
+              dm.Q1.Last;
+              gr2:=dm.Q1.fieldbyname('id_group').AsInteger+1;
+              if strtointdef(copy(st1,length(st1)-2,2),0)>0 then
+                begin
+                dm.Q1.Close;
+                dm.Q1.SQL.Clear;
+                dm.Q1.SQL.Add('insert into groups(id_div,names,id_group,year_s,course,reality) values('+
+                quotedstr(inttostr(d1))+','+qoutedstr(st1)+','+quotedstr(inttostr(gr2))+','+quotedstr('20'+
+                copy(st1,lenght(st1)-2,2))+','+quotedstr(inttostr(course1))+','quotedstr(inttostr(1))+')');
+                dm.Q1.ExecSQl;
+                end else
+                begin
+                //to bo continied
+                end;
+              end;
+            end else
+            begin
+            //to bo continied
+            end;
+          st1;=sheet.cells.[j,37];
+          if st1>'' then ct1:=1 else ct1:=2;
+          st1:=sheet.cells[j,9];
+          st2:=sheet.cells[j,12];
+          st3:=sheet.cells[j,10];
+          st4:=sheet.cells[j,32];
+          end;
+        end;
+      end;
+    messagedlg(''+form1.Sd1_st+'',mtInformation,[mbok],0);
+    x1.quit;
+    end;
+  end;
+end;
 end.

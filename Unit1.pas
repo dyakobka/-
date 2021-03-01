@@ -138,7 +138,7 @@ if (edit1.Text>'') and (edit2.Text>'') then
         dm.Q1.Active:=true;
         if dm.Q1.Eof=false then
          begin
-         gr1_st:=dm.Q1.fieldbyname('Name').AsString;
+         gr1_st:=dm.Q1.fieldbyname('Names').AsString;
          y_s:=dm.Q1.fieldbyname('Year_S').AsInteger;
          course_t:=dm.Q1.fieldbyname('Course').AsInteger;
          decodedate(date(),t3,t2,t1);
