@@ -7,9 +7,10 @@ object DM: TDM
   object ADOConnection1: TADOConnection
     ConnectionString = 
       'Provider=MSDASQL.1;Persist Security Info=False;Extended Properti' +
-      'es="DSN='#1057#1055#1050#1048#1057'20.mdb;DBQ=C:\Users\INWIN017\Desktop\spkis\spkis\'#1057#1055 +
-      #1050#1048#1057'20.mdb;DriverId=25;FIL=MS Access;MaxBufferSize=2048;PageTimeo' +
-      'ut=5;UID=admin;"'
+      'es="DSN='#1057#1055#1050#1048#1057'20.mdb;DBQ=\\192.168.0.245\share student$\Desktop S' +
+      'tudent$\'#1044#1100#1103#1082#1086#1085#1086#1074#1072' '#1042#1077#1088#1086#1085#1080#1082#1072'\'#1056#1072#1073#1086#1095#1080#1081' '#1089#1090#1086#1083'\spkis\spkis\'#1057#1055#1050#1048#1057'20.mdb;' +
+      'DriverId=25;FIL=MS Access;MaxBufferSize=2048;PageTimeout=5;UID=a' +
+      'dmin;"'
     Provider = 'MSDASQL.1'
     Left = 32
     Top = 8

@@ -189,14 +189,14 @@ while dm.Q1.Eof=false do  begin
   end;
 listbox1.Sorted:=true;
 for i:=0 to ListBox1.Items.Count-1 do
-  {begin
+  begin
   st1:=listbox1.Items[i];
   stringgrid2.RowCount:=i+3;
   stringgrid2.Cells[0,i+2]:=inttostr(i+1);
   stringgrid2.Cells[1,i+2]:=copy(st1,1,pos ('#', st1)-1);
   delete (st1,1, pos ('#',st1));
-  stringgrid2.Cells[2,i+2]:=stl;
-  end; }
+  stringgrid2.Cells[2,i+2]:=st1;
+  end;
 //zapstr4(sender);
 end;
 
@@ -256,7 +256,7 @@ if dm.Q1.Eof=false then ey1:=dm.Q1.fieldbyname('id_ey').AsInteger else
 dm.Q1.Close;
 dm.Q1.SQL.Clear;
 dm.Q1.SQL.Add('select * from protocols where id_ey='+inttostr(ey1)+' and semester='+ inttostr(strtoint(label8.Caption))+' and id_ct=l and id_group='+inttostr(form1.gr1));
-//1 dm.Q1.Active:=true;
+//dm.Q1.Active:=true;
 i:=0;
 
 while dm.Q1.Eof=false do

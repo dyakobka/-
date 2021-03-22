@@ -1,8 +1,8 @@
 object Form2: TForm2
-  Left = 753
-  Top = 179
-  Width = 783
-  Height = 706
+  Left = 539
+  Top = 214
+  Width = 1153
+  Height = 721
   Caption = #1057#1090#1091#1076#1077#1085#1090
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET

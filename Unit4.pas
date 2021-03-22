@@ -4,7 +4,7 @@ interface
 
 uses
   Windows, Messages, SysUtils, Variants, Classes, Graphics, Controls, Forms,
-  Dialogs, StdCtrls, Grids, ExtCtrls, Buttons, Menus;
+  Dialogs, StdCtrls, Grids, ExtCtrls, Buttons, Menus, ExtDlgs;
 
 type
   TForm4 = class(TForm)
@@ -52,11 +52,22 @@ type
     N12: TMenuItem;
     ComboBox1: TComboBox;
     ComboBox3: TComboBox;
+    OpenPictureDialog1: TOpenPictureDialog;
+    Label14: TLabel;
+    Label15: TLabel;
+    Label16: TLabel;
+    MainMenu1: TMainMenu;
+    N13: TMenuItem;
+    N14: TMenuItem;
+    N15: TMenuItem;
+    N16: TMenuItem;
     procedure FormActivate(Sender: TObject);
     procedure FormCreate(Sender: TObject);
     Procedure Zap_STR1(Sender: TObject);
     procedure N1Click(Sender: TObject);
     procedure N9Click(Sender: TObject);
+    procedure N7Click(Sender: TObject);
+    procedure N15Click(Sender: TObject);
   private
     { Private declarations }
   public
@@ -364,6 +375,87 @@ while dm.Q1.Eof=false do
   end;
 end;
 
+procedure TForm4.N7Click(Sender: TObject);
+var cource_next, gr1, cur1, ey1, ns1, sd1 : integer;
+  t1, t2, t3 : word;
+  st1: dtring;
+begin
+decodedate(date(),t3,t2,t1);
+if date()>strtodate('01.09.'+inttostr(t3)) then st1:=inttostr(t3)+'-'+inttostr(t3+1) else st1:=inttostr(t3-1)+'-'+
+inttostr(t3);
+st1:=copy(st1,6,4)+'-'+inttostr(strtoint(copy(st1,6,4))+1);
+dm.Q1.Close;
+dm.Q1.SQL.Clear;
+dm.Q1.SQL.Add('select * from education_years where names='+quotedstr(st1);
+dm.Q1.Active:=true;
+if dm.Q1.Eof=false then ey1:=dm.Q1.fieldbyname('id_ey').AsInteger else
+  begin
+  dm.Q1.Close;
+  dm.Q1.SQL.Clear;
+  dm.Q1.SQL.Add('select * from education_years order by id_ey');
+  dm.Q1.Active:=true;
+  dm.Q1.Last;
+  ey1:=dm.Q1.fieldbyname('id_ey').AsInteger+1;
+  dm.Q1.Close;
+  dm.Q1.SQL.Clear;
+  dm.Q1.SQL.Add('insert into education_years(names,id_ey) values('+quotedstr(st1)+','+inttostr(ey1)+')');
+  dm.Q1.ExecSQL;
+  end;
+dm.Q1.Close;
+dm.Q1.SQL.Clear;
+dm.Q1.SQL.Add('select * from qroups where reality=1');
+dm.Q1.Active:=true;
+while dm.Q1.Eof=false do
+  begin
+  if dm.Q1.FieldByName('course').AsInteger<(dm.Q1.FieldByName('year_f').AsInteger-
+  dm.Q1.FieldByName('year_f').AsInteger) then
+    begin
+    course_next:=dm.Q1.fieldbyname('course').AsInteger+1;
+    cur1:=dm.Q1.fieldbyname('id_cur').AsInteger;
+    dm.Q2.Close;
+    dm.Q2.SQL.Clear;
+    dm.Q2.SQL.Add('select * from body_curriculumns where id_cur='+inttostr(cur1)+' and course='+
+    inttostr(course_next));
+    dm.Q2.Active:=true;
+    while dm.Q2.Eof = false do
+      begin
+      dm.Q3.Close;
+      dm.Q3.SQL.Clear;
+      dm.Q3.SQL.Add('select * from free_loads where id_ey='+inttostr(ey1)+
+      ' and course='+quotedstr(dm.Q1.fieldbyname('course').AsString)+
+      ' and semester='+quotedstr(dm.Q2.fieldbyname('semester').AsString)+
+      ' and id_group='+quotedstr(dm.Q2.fieldbyname('id_group').AsString)+
+      ' and id_sub='+quotedstr(dm.Q2.fieldbyname('id_sub').AsString));
+      dm.Q3.Active:=true;
+      if dm.Q3.Eof=true then
+        begin
+
+        if (dm.Q2.FieldByName('semester').AsInteger mod 2)=0 then ns1:=2 else ns1:=1;
+        dm.Q3.Close;
+        dm.Q3.SQL.Clear;
+        dm.Q3.SQL.Add('insert info free_loads(id_ey,edu_sem,id_sub,id_ct,course,semester,hours_lex,hours_lab,'+
+        'hours_pract,hours_srs,hours_ksr,hours_control,course,_work,course_project,control_work,referat,agw,'+
+        'id_subdiv) values('+inttostr(ey1)+','+inttostr(ns1)+','+quotedstr(dm.Q2.fieldbyname('id_sub').AsString)+
+        ','+quotedstr(dm.Q2.fieldbyname('id_ct').AsString)+','+quotedstr(dm.Q2.fieldbyname('course').AsString)+','+
+        quotedstr(dm.Q2.fieldbyname('semester').AsString)+','+quotedstr(dm.Q2.fieldbyname('hours_lex').AsString)+
+        ','+quotedstr(dm.Q2.fieldbyname('hours_lab').AsString)+','+
+        quotedstr(dm.Q2.fieldbyname('hours_pract').AsString)+','+quotedstr(dm.Q2.fieldbyname('hours_srs').AsString)+
+        ','+quotedstr(dm.Q2.fieldbyname('hours_ksr').AsString)+','+
+        quotedstr(dm.Q2.fieldbyname('hours_control').AsString)+','+
+        quotedstr(dm.Q2.fieldbyname('course_work').AsString)+','+
+        quotedstr(dm.Q2.fieldbyname('course_project').AsString)+','+
+        quotedstr(dm.Q2.fieldbyname('course_work').AsString)+','+quotedstr(dm.Q2.fieldbyname('referat').AsString)+
+        ','+quotedstr(dm.Q2.fieldbyname('agw').AsString)+','+quotedstr(dm.Q2.fieldbyname('id_subdiv').AsString)+')');
+        dm.Q3.ExecSQL;
+        end;
+      dm.Q2.Next;
+      end;
+    end;
+  dm.Q1.Next;
+  end;
+end;
+end;
+
 procedure TForm4.N1Click(Sender: TObject);
 begin
 form5.ShowModal;
@@ -504,4 +596,38 @@ if opendialog1.Execute then
     end;
   end;
 end;
+procedure TForm4.N15Click(Sender: TObject);
+var rez : TModalResult;
+  course_next : integer;
+begin
+dm.Q1.Close;
+dm.Q1.SQL.Clear;
+dm.Q1.SQL.Add('select * from groups where realiry=1');
+dm.Q1.Active:=true;
+while dm.Q1.Eof=false do
+  begin
+  if dm.Q1.FieldByName('id_cur').AsInteger=0 then
+  rez:=messagedlg('Выберите рабочий учебный план для групы '+ dm.Q1.fieldbyname('names').AsString,mtinformation,[mbok,mbno],0);
+  if rez=mrok then
+    begin
+    if opendialog1.Execute then
+      begin
+      if (dm.Q1.FieldByName('years_f').AsInteger-dm.Q1.FieldByName('years_s').AsInteger)>dm.Q1.FieldByName('course').AsInteger then
+        begin
+        course_next:=dm.Q1.fieldbyname('course').AsInteger+1;
+        x1:=CreateOLEObject('excel.application');
+        wb:=x1.WorkBooks.add(opendialog1.Name);
+        sheet:=wb.sheet[3];
+        if sheet.name='ПланСвод' then
+          begin
+          //
+          end;
+        end;
+      end;
+    end;
+  x1.quit;
+  dm.Q1.next;
+  end;
+end;
+
 end.
